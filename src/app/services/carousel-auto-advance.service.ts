@@ -1,5 +1,5 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { interval } from 'rxjs';
+import { timer } from 'rxjs';
 import { CAROUSEL_TIMER_CONFIG } from '../constants/carousel-timer.config';
 import { CarouselStateService } from './carousel-state.service';
 
@@ -14,7 +14,8 @@ export class CarouselAutoAdvanceService {
       this.enabledSignal() &&
       this.carousel.slidesCount() > 1 &&
       !this.carousel.isDragging() &&
-      !this.carousel.isTransitioning()
+      !this.carousel.isTransitioning() &&
+      !this.carousel.isJumping()
     );
   });
 
@@ -26,7 +27,12 @@ export class CarouselAutoAdvanceService {
         return;
       }
       const delayMs = this.delayMsSignal();
-      const sub = interval(delayMs).subscribe(() => this.carousel.next());
+      const sub = timer(delayMs).subscribe(() => {
+        if (!this.canAutoAdvanceSignal()) {
+          return;
+        }
+        this.carousel.next();
+      });
       onCleanup(() => sub.unsubscribe());
     });
   }

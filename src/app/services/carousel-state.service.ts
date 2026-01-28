@@ -10,6 +10,7 @@ export class CarouselStateService {
   private readonly dragOffsetSignal = signal(0);
   private readonly transitionDurationMsSignal = signal(420);
   private readonly isTransitioningSignal = signal(false);
+  private readonly isJumpingSignal = signal(false);
 
   private readonly renderSlidesSignal = computed(() => {
     const slides = this.slidesSignal();
@@ -40,6 +41,7 @@ export class CarouselStateService {
   });
 
   private transitionTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private jumpTimeoutId: ReturnType<typeof setTimeout> | null = null;
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
@@ -54,6 +56,7 @@ export class CarouselStateService {
   readonly isDragging = this.isDraggingSignal.asReadonly();
   readonly dragOffset = this.dragOffsetSignal.asReadonly();
   readonly isTransitioning = this.isTransitioningSignal.asReadonly();
+  readonly isJumping = this.isJumpingSignal.asReadonly();
   readonly transitionDurationMs = this.transitionDurationMsSignal.asReadonly();
   readonly slidesCount = computed(() => this.slidesSignal().length);
 
@@ -158,22 +161,26 @@ export class CarouselStateService {
       return;
     }
     this.clearTransitionFallback();
+    if (this.handleEdgeJumpIfNeeded()) {
+      return;
+    }
     this.isTransitioningSignal.set(false);
-    this.handleEdgeJumpIfNeeded();
   }
 
-  private handleEdgeJumpIfNeeded(): void {
+  private handleEdgeJumpIfNeeded(): boolean {
     const slides = this.slidesSignal();
     if (slides.length === 0) {
-      return;
+      return false;
     }
     if (this.renderIndexSignal() === 0) {
       this.jumpTo(slides.length);
-      return;
+      return true;
     }
     if (this.renderIndexSignal() === slides.length + 1) {
       this.jumpTo(1);
+      return true;
     }
+    return false;
   }
 
   private startTransitionFallback(): void {
@@ -193,21 +200,38 @@ export class CarouselStateService {
   }
 
   private jumpTo(index: number): void {
+    this.isJumpingSignal.set(true);
     this.isAnimatingSignal.set(false);
+    this.clearJumpTimeout();
     this.renderIndexSignal.set(index);
-    requestAnimationFrame(() => {
+    this.jumpTimeoutId = setTimeout(() => {
       this.isAnimatingSignal.set(true);
-    });
+      this.isJumpingSignal.set(false);
+      this.isTransitioningSignal.set(false);
+      this.jumpTimeoutId = null;
+    }, 50);
   }
 
   private resetInteractionState(): void {
     this.clearTransitionFallback();
+    this.clearJumpTimeout();
     this.isTransitioningSignal.set(false);
+    this.isJumpingSignal.set(false);
+    this.isAnimatingSignal.set(true);
     this.isDraggingSignal.set(false);
     this.dragOffsetSignal.set(0);
   }
 
   private cleanup(): void {
     this.clearTransitionFallback();
+    this.clearJumpTimeout();
+  }
+
+  private clearJumpTimeout(): void {
+    if (!this.jumpTimeoutId) {
+      return;
+    }
+    clearTimeout(this.jumpTimeoutId);
+    this.jumpTimeoutId = null;
   }
 }
