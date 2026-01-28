@@ -5,6 +5,9 @@
 - RxJS (timers, async data)
 - SCSS (component styles + global theme variables)
 
+## Live demo
+https://gepard-task.onrender.com/
+
 ## Architecture decisions
 - **Component-scoped state**: `CarouselStateService` is provided at the carousel component level so each carousel instance has isolated state and lifecycle cleanup.
 - **State machine only**: `CarouselStateService` owns only carousel state (slides, render index, drag/transition flags, offsets) and navigation actions. It contains no timers or DOM event wiring.
