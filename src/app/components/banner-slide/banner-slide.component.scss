@@ -79,6 +79,9 @@
   width: min(86vw, 330px);
   margin-bottom: 0.9rem;
   filter: drop-shadow(0 22px 30px rgba(8, 12, 24, 0.45));
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .slide[data-slide='winzup'] .slide-image {
