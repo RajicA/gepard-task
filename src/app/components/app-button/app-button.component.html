@@ -1,0 +1,18 @@
+@if (link && isInternalLink) {
+  <button type="button" class="app-button" [routerLink]="link">
+    {{ label }}
+  </button>
+} @else if (link) {
+  <a
+    class="app-button"
+    [attr.href]="link"
+    [attr.target]="target"
+    [attr.rel]="rel"
+  >
+    {{ label }}
+  </a>
+} @else {
+  <button type="button" class="app-button">
+    {{ label }}
+  </button>
+}

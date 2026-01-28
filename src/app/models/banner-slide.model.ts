@@ -6,4 +6,5 @@ export interface BannerSlide {
   backgroundImage: string;
   mainImage: string;
   buttonText: string;
+  buttonLink: string;
 }

@@ -18,7 +18,7 @@ https://gepard-task.onrender.com/
 - **Mock data layer**: `BannerSlidesApiService` simulates API loading, keeping demo data out of the component and ready for replacement with real endpoints.
 
 ## Structure (key files)
-- `src/app/components/` – UI components (carousel, slide, dots, desktop message, state overlay)
+- `src/app/components/` – UI components (carousel, slide, dots, desktop message, state overlay, app button)
 - `src/app/directives/carousel-gesture.directive.ts` – pointer/swipe handling
 - `src/app/services/carousel-state.service.ts` – carousel state machine
 - `src/app/services/carousel-auto-advance.service.ts` – timer/auto-advance driver

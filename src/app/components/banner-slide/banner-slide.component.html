@@ -23,6 +23,9 @@
     } @else {
       <p class="slide-text">{{ slide.text }}</p>
     }
-    <button type="button" class="slide-button">{{ slide.buttonText }}</button>
+    <app-button
+      [link]="slide.buttonLink"
+      [label]="slide.buttonText"
+    ></app-button>
   </div>
 </article>

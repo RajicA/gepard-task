@@ -20,6 +20,9 @@ export class CarouselGestureDirective {
     if (event.pointerType === 'mouse' && event.button !== 0) {
       return;
     }
+    if (this.isInteractiveTarget(event.target)) {
+      return;
+    }
     this.startX = event.clientX;
     this.startY = event.clientY;
     this.isHorizontalSwipe = false;
@@ -83,5 +86,15 @@ export class CarouselGestureDirective {
     if (target?.releasePointerCapture) {
       target.releasePointerCapture(event.pointerId);
     }
+  }
+
+  private isInteractiveTarget(target: EventTarget | null): boolean {
+    const element = target as HTMLElement | null;
+    if (!element) {
+      return false;
+    }
+    return Boolean(
+      element.closest('button, a, input, textarea, select, [data-carousel-no-drag]')
+    );
   }
 }

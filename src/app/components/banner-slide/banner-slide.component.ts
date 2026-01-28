@@ -1,10 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { AppButtonComponent } from '../app-button/app-button.component';
 import { BannerSlide } from '../../models/banner-slide.model';
 
 @Component({
   selector: 'app-banner-slide',
   templateUrl: './banner-slide.component.html',
-  styleUrl: './banner-slide.component.scss'
+  styleUrl: './banner-slide.component.scss',
+  imports: [AppButtonComponent]
 })
 export class BannerSlideComponent {
   @Input() slide!: BannerSlide;
