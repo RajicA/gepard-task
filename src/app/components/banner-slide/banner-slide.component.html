@@ -1,0 +1,27 @@
+<article
+  class="slide"
+  [class.is-active]="isActive"
+  [style.backgroundImage]="'url(' + slide.backgroundImage + ')'"
+  role="group"
+  [attr.aria-label]="slide.title"
+  [attr.data-slide]="slide.id"
+>
+  <div class="slide-overlay"></div>
+  <div class="slide-inner">
+    <img
+      class="slide-image"
+      [src]="slide.mainImage"
+      [alt]="slide.title"
+      loading="lazy"
+    />
+    <h2 class="slide-title">{{ slide.title }}</h2>
+    @if (highlightParts.token) {
+      <p class="slide-text">
+        {{ highlightParts.before }}<span class="highlight">{{ highlightParts.token }}</span>{{ highlightParts.after }}
+      </p>
+    } @else {
+      <p class="slide-text">{{ slide.text }}</p>
+    }
+    <button type="button" class="slide-button">{{ slide.buttonText }}</button>
+  </div>
+</article>

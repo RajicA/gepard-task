@@ -1,0 +1,12 @@
+<div class="carousel-dots" role="tablist" aria-label="Banner navigation">
+  @for (slide of slides; track slide.id) {
+    <button
+      type="button"
+      class="dot"
+      [class.is-active]="$index === activeIndex"
+      (click)="onNavigate($index)"
+      [attr.aria-label]="'Go to ' + slide.title"
+      role="tab"
+    ></button>
+  }
+</div>

@@ -1,0 +1,56 @@
+:host {
+  font-family: "Space Grotesk", "Avenir Next", "Trebuchet MS", sans-serif;
+  display: block;
+  min-height: 100vh;
+  background: var(
+    --app-background,
+    radial-gradient(120% 120% at 0% 0%, #182238 0%, #0c1220 45%, #070b14 100%)
+  );
+  color: var(--text);
+}
+
+:host,
+:host * {
+  box-sizing: border-box;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+.carousel-shell {
+  min-height: 100svh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0 2.5rem;
+}
+
+.carousel {
+  width: 100vw;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.carousel-track {
+  display: flex;
+}
+
+.carousel-track.is-animating {
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (min-width: 600px) {
+  .carousel-shell {
+    display: none;
+  }
+}

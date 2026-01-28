@@ -1,59 +1,30 @@
-# GepardTask
+# Gepard Task – Mobile Carousel
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.1.
+## Tech stack
+- Angular (standalone components + signals)
+- RxJS (timers, async data)
+- SCSS (component styles + global theme variables)
 
-## Development server
+## Architecture decisions
+- **Component-scoped state**: `CarouselStateService` is provided at the carousel component level so each carousel instance has isolated state and lifecycle cleanup.
+- **State machine only**: `CarouselStateService` owns only carousel state (slides, render index, drag/transition flags, offsets) and navigation actions. It contains no timers or DOM event wiring.
+- **Timer separated**: `CarouselAutoAdvanceService` owns auto-advance scheduling and pause/resume rules, calling `carousel.next()` when allowed. This keeps timing concerns isolated and easier to change without touching carousel logic.
+- **Gesture logic in a directive**: `CarouselGestureDirective` handles pointer capture, intent detection, and swipe thresholds, then calls semantic actions on the state service. This keeps templates clean and makes gestures reusable/testable.
+- **Layout computed in component**: The carousel component builds a view-model (transform string, track width) so CSS/layout stays in the view layer while the state service remains purely numeric.
+- **Clone strategy for infinite loop**: Rendered slides are `[last, ...slides, first]`. The service keeps a `renderIndex` (0..length+1) and maps to `activeIndex` for dot indicators.
+- **Mock data layer**: `BannerSlidesApiService` simulates API loading, keeping demo data out of the component and ready for replacement with real endpoints.
 
-To start a local development server, run:
+## Structure (key files)
+- `src/app/components/` – UI components (carousel, slide, dots, desktop message, state overlay)
+- `src/app/directives/carousel-gesture.directive.ts` – pointer/swipe handling
+- `src/app/services/carousel-state.service.ts` – carousel state machine
+- `src/app/services/carousel-auto-advance.service.ts` – timer/auto-advance driver
+- `src/app/services/banner-slides-api.service.ts` – mock data source
+- `src/app/models/` – typed models
+- `src/styles/theme.scss` – theme variables shared across components
 
+## Run
 ```bash
+npm install
 ng serve
 ```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

@@ -1,0 +1,43 @@
+<app-desktop-message></app-desktop-message>
+
+<section
+  class="carousel-shell mobile-only"
+  aria-label="Promotional banners"
+  [attr.aria-busy]="isLoading() ? 'true' : 'false'"
+>
+  <app-carousel-state
+    [error]="error()"
+    [isLoading]="isLoading()"
+    (retry)="retry()"
+  ></app-carousel-state>
+
+  <div
+    class="carousel"
+    appCarouselGesture
+    [swipeThreshold]="swipeThreshold()"
+    [swipeIntentThreshold]="swipeIntentThreshold()"
+  >
+    <div
+      class="carousel-track"
+      [class.is-animating]="vm().isAnimatingClass"
+      [style.transform]="vm().transform"
+      [style.width]="vm().trackWidth"
+      (transitionend)="carousel.onTransitionEnd()"
+    >
+      @for (slide of vm().renderSlides; track $index) {
+        <app-banner-slide
+          [slide]="slide"
+          [isActive]="$index === vm().renderIndex"
+        ></app-banner-slide>
+      }
+    </div>
+  </div>
+
+  @if (carousel.slidesCount() > 1) {
+    <app-carousel-dots
+      [slides]="carousel.slides()"
+      [activeIndex]="vm().activeIndex"
+      (navigate)="carousel.goToSlide($event)"
+    ></app-carousel-dots>
+  }
+</section>

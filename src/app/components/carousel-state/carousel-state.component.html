@@ -1,0 +1,15 @@
+@if (error) {
+  <div class="carousel-state">
+    <div class="state-card" role="alert">
+      <p>Could not load banners.</p>
+      <button type="button" class="state-button" (click)="onRetry()">Try again</button>
+    </div>
+  </div>
+} @else if (isLoading) {
+  <div class="carousel-state" aria-live="polite">
+    <div class="state-card is-loading">
+      <span class="state-pulse"></span>
+      <p>Loading...</p>
+    </div>
+  </div>
+}
